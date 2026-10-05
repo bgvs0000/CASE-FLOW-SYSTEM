@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard | CaseFlow</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<link rel="stylesheet" href="CSS/shared.css">
+<link rel="stylesheet" href="CSS/layout.css">
+<link rel="stylesheet" href="CSS/dashboard.css">
+<link rel="stylesheet" href="CSS/smart-routing.css">
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <div id="sidebarMount"></div>
+    <header id="topnavMount"></header>
+
+    <main class="main-content">
+
+      <div class="page-heading">
+        <div>
+          <h1><i class="fa-solid fa-gauge-high"></i> Case Dashboard</h1>
+          <p>Overview of all cases and their current status.</p>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn-outline" id="drawerCabinetTriggerBtn" title="Open Filing Cabinet">
+            <i class="fa-solid fa-box-archive"></i> Cabinet
+          </button>
+          <button class="btn-primary" id="addCaseBtn">
+            <i class="fa-solid fa-plus"></i> Add Case
+          </button>
+        </div>
+      </div>
+
+      <!-- ===================== STAT TILES ===================== -->
+      <div class="tiles-grid">
+        <div class="tile">
+          <div class="tile-icon"><i class="fa-solid fa-folder-open"></i></div>
+          <div class="tile-info">
+            <h3 id="tileTotalCases">0</h3>
+            <p>Total Cases</p>
+          </div>
+        </div>
+        <div class="tile">
+          <div class="tile-icon"><i class="fa-solid fa-bolt"></i></div>
+          <div class="tile-info">
+            <h3 id="tileActiveCases">0</h3>
+            <p>Active Cases</p>
+          </div>
+        </div>
+        <div class="tile">
+          <div class="tile-icon"><i class="fa-solid fa-hourglass-half"></i></div>
+          <div class="tile-info">
+            <h3 id="tilePendingCases">0</h3>
+            <p>Pending Cases</p>
+          </div>
+        </div>
+        <div class="tile">
+          <div class="tile-icon"><i class="fa-solid fa-circle-check"></i></div>
+          <div class="tile-info">
+            <h3 id="tileCompletedCases">0</h3>
+            <p>Completed Cases</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== TOOLBAR ===================== -->
+      <div class="toolbar">
+        <div class="toolbar-left">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="caseSearchInput" placeholder="Search by case number, client, case name...">
+          </div>
+          <select class="sort-select" id="caseSortSelect">
+            <option value="az">Sort: A–Z</option>
+            <option value="za">Sort: Z–A</option>
+            <option value="newest">Date Created – Newest</option>
+            <option value="oldest">Date Created – Oldest</option>
+            <option value="status">Sort: Status</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- ===================== CASE TABLE ===================== -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Case Number</th>
+              <th>Client Name</th>
+              <th>Case Name</th>
+              <th>Court Name</th>
+              <th>Court Address</th>
+              <th>Hearing Date</th>
+              <th>Drawer</th>
+              <th>Documents</th>
+              <th>Progress</th>
+              <th>Status</th>
+              <th id="caseCustomFieldHeaders"><!-- Custom field headers + "+" button injected by dashboard.js --></th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="caseTableBody">
+            <tr class="empty-row"><td colspan="12">No cases found.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ===================== ADD / EDIT CASE MODAL ===================== -->
+  <div class="modal-overlay" id="caseModalOverlay">
+    <div class="modal-box glass">
+      <div class="modal-header">
+        <h2 id="caseModalTitle"><i class="fa-solid fa-folder-plus"></i> Add Case</h2>
+        <button class="modal-close" id="closeCaseModal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <form id="caseForm" autocomplete="off">
+          <input type="hidden" id="caseId">
+
+          <label class="field-label">Case Number</label>
+          <div class="input-group">
+            <i class="fa-solid fa-hashtag"></i>
+            <input type="text" id="caseNumber" placeholder="e.g. CASE-2026-001" required>
+          </div>
+
+          <label class="field-label">Select Client</label>
+          <div class="input-group">
+            <i class="fa-solid fa-user"></i>
+            <select id="caseClientSelect" required>
+              <option value="">-- Select a Client --</option>
+            </select>
+          </div>
+
+          <label class="field-label">Case Name</label>
+          <div class="input-group">
+            <i class="fa-solid fa-gavel"></i>
+            <input type="text" id="caseName" placeholder="e.g. Dela Cruz vs. Santos" required>
+          </div>
+
+          <label class="field-label">Court Name</label>
+          <div class="input-group">
+            <i class="fa-solid fa-landmark"></i>
+            <input type="text" id="courtName" placeholder="e.g. RTC Branch 5" required>
+          </div>
+
+          <label class="field-label">Court Address</label>
+          <div class="input-group">
+            <i class="fa-solid fa-location-dot"></i>
+            <input type="text" id="courtAddress" placeholder="Court address">
+          </div>
+
+          <label class="field-label">Hearing Date</label>
+          <div class="input-group">
+            <i class="fa-solid fa-calendar-days"></i>
+            <input type="date" id="hearingDate">
+          </div>
+
+          <label class="field-label">Filing Cabinet Drawer</label>
+          <div class="input-group">
+            <i class="fa-solid fa-box-archive"></i>
+            <select id="caseDrawerNumber">
+              <option value="">-- Not Assigned --</option>
+              <option value="1">Drawer 1</option>
+              <option value="2">Drawer 2</option>
+              <option value="3">Drawer 3</option>
+            </select>
+          </div>
+
+          <label class="field-label">Status</label>
+          <div class="input-group">
+            <i class="fa-solid fa-list-check"></i>
+            <select id="caseStatus" required>
+              <option value="active">Active</option>
+              <option value="pending">Pending</option>
+              <option value="completed">Completed</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+          </div>
+
+          <!-- Custom field inputs injected here by dashboard.js, if any exist -->
+          <div id="caseCustomFieldsWrap"></div>
+
+          <div id="caseFormError" class="form-error"></div>
+
+          <button type="submit" class="btn-primary full-width">
+            <i class="fa-solid fa-floppy-disk"></i> Save Case
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== DOCUMENTS MODAL (Case Document Manager) ===================== -->
+  <div class="modal-overlay" id="documentsModalOverlay">
+    <div class="modal-box modal-lg glass">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-folder-open"></i> Case Documents — <span id="docsCaseLabel"></span></h2>
+        <button class="modal-close" id="closeDocumentsModal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <input type="hidden" id="docsCaseId">
+
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <div class="search-box">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="docSearchInput" placeholder="Search documents...">
+            </div>
+            <select class="sort-select" id="docSortSelect">
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="az">Name A–Z</option>
+              <option value="za">Name Z–A</option>
+            </select>
+          </div>
+
+          <button type="button" class="smart-scan-btn" id="smartScanBtnDashboard">
+            <i class="fa-solid fa-robot"></i> Scan & Auto-Route
+          </button>
+
+          <label class="btn-primary" for="docUploadInput" style="cursor:pointer;">
+            <i class="fa-solid fa-upload"></i> Upload Document
+          </label>
+          <input type="file" id="docUploadInput" style="display:none;" multiple>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>File Name</th>
+                <th>Type</th>
+                <th>Date Uploaded</th>
+                <th>Size</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="documentsTableBody">
+              <tr class="empty-row"><td colspan="5">No documents uploaded yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== DOCUMENT RENAME MODAL ===================== -->
+  <div class="modal-overlay" id="renameDocModalOverlay">
+    <div class="modal-box glass">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-pen"></i> Rename Document</h2>
+        <button class="modal-close" id="closeRenameDocModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="renameDocForm" autocomplete="off">
+          <input type="hidden" id="renameDocId">
+          <label class="field-label">New File Name</label>
+          <div class="input-group">
+            <i class="fa-solid fa-file"></i>
+            <input type="text" id="renameDocInput" required>
+          </div>
+          <button type="submit" class="btn-primary full-width">
+            <i class="fa-solid fa-check"></i> Rename
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== DOCUMENT VIEW MODAL ===================== -->
+  <div class="modal-overlay" id="viewDocModalOverlay">
+    <div class="modal-box modal-lg glass">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-eye"></i> <span id="viewDocName"></span></h2>
+        <button class="modal-close" id="closeViewDocModal">&times;</button>
+      </div>
+      <div class="modal-body" id="viewDocBody" style="text-align:center;">
+        <!-- Preview injected by documents.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== PROGRESS MODAL ===================== -->
+  <div class="modal-overlay" id="progressModalOverlay">
+    <div class="modal-box modal-lg glass">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-chart-line"></i> Case Progress — <span id="progressCaseLabel"></span></h2>
+        <button class="modal-close" id="closeProgressModal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <input type="hidden" id="progressCaseId">
+
+        <button class="btn-primary" id="addProgressBtn" style="margin-bottom:18px;">
+          <i class="fa-solid fa-plus"></i> Add Progress
+        </button>
+
+        <div id="progressHistoryList">
+          <p class="text-muted" id="noProgressMsg">No progress entries yet.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== ADD PROGRESS MODAL ===================== -->
+  <div class="modal-overlay" id="addProgressModalOverlay">
+    <div class="modal-box glass">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-plus"></i> Add Progress</h2>
+        <button class="modal-close" id="closeAddProgressModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="addProgressForm" autocomplete="off">
+          <label class="field-label">Progress Title</label>
+          <div class="input-group">
+            <i class="fa-solid fa-heading"></i>
+            <input type="text" id="progressTitle" placeholder="e.g. Filing Submitted" required>
+          </div>
+
+          <label class="field-label">Progress Details</label>
+          <div class="input-group">
+            <i class="fa-solid fa-align-left"></i>
+            <textarea id="progressDetails" placeholder="Describe what happened..." required></textarea>
+          </div>
+
+          <label class="field-label">Upload Image (optional)</label>
+          <div class="input-group">
+            <i class="fa-solid fa-image"></i>
+            <input type="file" id="progressImageInput" accept="image/*">
+          </div>
+
+          <div id="progressImgPreviewWrap" style="display:none; margin-bottom:14px;">
+            <img id="progressImgPreview" style="max-width:100%; border-radius:8px;">
+          </div>
+
+          <div id="addProgressError" class="form-error"></div>
+
+          <button type="submit" class="btn-primary full-width">
+            <i class="fa-solid fa-floppy-disk"></i> Save Progress
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== DRAWER CABINET MODAL ===================== -->
+  <div class="modal-overlay" id="drawerCabinetModalOverlay">
+    <div class="modal-box modal-lg glass">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-box-archive"></i> Filing Cabinet</h2>
+        <button class="modal-close" id="closeDrawerCabinetModal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="cabinet-wrapper" id="cabinetWrapper">
+          <!-- 3 drawer fronts + their sliding contents, injected by dashboard.js -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== SCRIPTS ===================== -->
+  <script src="JS/storage.js"></script>
+  <script src="JS/demo-data.js"></script>
+  <script src="JS/auth.js"></script>
+  <script src="JS/modal.js"></script>
+  <script src="JS/navigation.js"></script>
+  <script src="JS/ai-assistant.js"></script>
+  <script src="JS/doc-intelligence.js"></script>
+  <script src="JS/case-intelligence.js"></script>
+  <script src="JS/documents.js"></script>
+  <script src="JS/bulk-sellect.js"></script>
+  <script src="JS/account.js"></script>
+   <script src="JS/trash-bin.js"></script>
+  <script src="JS/progress.js"></script>
+  <script src="JS/custom-field.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.0.4/tesseract.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    if (window.pdfjsLib) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+  </script>
+  <script src="JS/smart-routing.js"></script>
+
+  <script src="JS/dashboard.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('smartScanBtnDashboard');
+      if (btn) {
+        btn.addEventListener('click', () => {
+          const caseId = document.getElementById('docsCaseId').value;
+          const caseObj = caseId ? findCaseById(caseId) : null;
+          triggerSmartScan(caseObj ? caseObj.clientId : null, caseId || null);
+        });
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Client Portal | CaseFlow</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<link rel="stylesheet" href="CSS/shared.css">
+<link rel="stylesheet" href="CSS/client-view.css">
+</head>
+<body>
+
+  <!-- ===================== PORTAL HEADER (always visible) ===================== -->
+  <header class="portal-header">
+    <div class="portal-header-brand">
+      <img src="IMG/logo.jpg" alt="CaseFlow" class="sidebar-logo" style="background:none;box-shadow:none;padding:0;object-fit:contain;display:block;width:48px;height:48px;border-radius:50%;flex-shrink:0;">
+      <div>
+        <h1>CaseFlow</h1>
+        <p>Client Portal</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="portal-main">
+
+    <!-- ===================== STATE: INVALID / MISSING TOKEN ===================== -->
+    <div class="portal-state-screen" id="stateInvalid" style="display:none;">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <h2>Invalid Link</h2>
+      <p>This portal link is invalid or the client record no longer exists. Please contact the firm for a new link.</p>
+    </div>
+
+    <!-- ===================== STATE: LOCKED ===================== -->
+    <div class="portal-state-screen" id="stateLocked" style="display:none;">
+      <i class="fa-solid fa-lock"></i>
+      <h2>Portal Locked</h2>
+      <p>This client portal is currently locked by the firm. Please contact your attorney or the firm directly for access.</p>
+    </div>
+
+    <!-- ===================== STATE: EXPIRED ===================== -->
+    <div class="portal-state-screen" id="stateExpired" style="display:none;">
+      <i class="fa-solid fa-hourglass-end"></i>
+      <h2>Access Expired</h2>
+      <p>This portal link's access window has ended. Please request a new link from the firm.</p>
+    </div>
+
+    <!-- ===================== STATE: CODE REQUIRED ===================== -->
+    <div class="portal-state-screen portal-code-screen" id="stateCodeRequired" style="display:none;">
+      <i class="fa-solid fa-shield-halved"></i>
+      <h2>Enter Access Code</h2>
+      <p>Please enter the 6-digit access code provided by the firm.</p>
+
+      <form id="portalCodeForm" autocomplete="off">
+        <div class="input-group portal-code-input-group">
+          <i class="fa-solid fa-key"></i>
+          <input type="text" id="portalCodeInput" placeholder="6-digit code" maxlength="6" inputmode="numeric" required>
+        </div>
+        <div id="portalCodeError" class="form-error"></div>
+        <button type="submit" class="btn-primary full-width">
+          <i class="fa-solid fa-unlock"></i> Unlock Portal
+        </button>
+      </form>
+    </div>
+
+    <!-- ===================== STATE: LOADED PORTAL CONTENT ===================== -->
+    <div class="portal-content" id="portalContent" style="display:none;">
+
+      <!-- ---------- CLIENT SUMMARY ---------- -->
+      <section class="portal-client-summary">
+        <div class="portal-client-avatar" id="portalClientAvatar"></div>
+        <div>
+          <h2 id="portalClientName"></h2>
+          <p id="portalClientMeta" class="text-muted"></p>
+        </div>
+      </section>
+
+      <section class="portal-contact-info">
+        <div class="portal-contact-item">
+          <i class="fa-solid fa-phone"></i>
+          <span id="portalClientContact">—</span>
+        </div>
+        <div class="portal-contact-item">
+          <i class="fa-solid fa-envelope"></i>
+          <span id="portalClientEmail">—</span>
+        </div>
+        <div class="portal-contact-item">
+          <i class="fa-solid fa-location-dot"></i>
+          <span id="portalClientAddress">—</span>
+        </div>
+      </section>
+
+      <div id="portalCaseInfoSection" class="portal-case-info-section" style="display:none;">
+        <h3><i class="fa-solid fa-gavel"></i> Case Background</h3>
+        <p id="portalCaseInfoText"></p>
+      </div>
+
+      <!-- ---------- CASES LIST ---------- -->
+      <h3 class="portal-section-heading"><i class="fa-solid fa-folder-open"></i> Your Cases</h3>
+      <div id="portalCasesList">
+        <!-- Injected by client-view.js: one block per case, each with
+             its own hearings / documents / progress sub-sections -->
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer class="portal-footer">
+    <p>&copy; <span id="portalCurrentYear"></span> CaseFlow. This is a private client portal — do not share this link.</p>
+  </footer>
+
+  <!-- ===================== DOCUMENT VIEW MODAL (read-only, case docs) ===================== -->
+  <div class="modal-overlay" id="portalDocViewModalOverlay">
+    <div class="modal-box modal-lg glass">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-eye"></i> <span id="portalDocViewName"></span></h2>
+        <button class="modal-close" id="closePortalDocViewModal">&times;</button>
+      </div>
+      <div class="modal-body" id="portalDocViewBody" style="text-align:center;">
+        <!-- Injected by client-view.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== SCRIPTS ===================== -->
+  <script src="JS/storage.js"></script>
+  <script src="JS/demo-data.js"></script>
+  <script src="JS/modal.js"></script>
+  <script src="JS/doc-intelligence.js"></script>
+  <script src="JS/case-intelligence.js"></script>
+  <script src="JS/client-view.js"></script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analytics | CaseFlow</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<link rel="stylesheet" href="CSS/shared.css">
+<link rel="stylesheet" href="CSS/layout.css">
+<link rel="stylesheet" href="CSS/analytics.css">
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <div id="sidebarMount"></div>
+    <header id="topnavMount"></header>
+
+    <main class="main-content">
+
+      <div class="page-heading">
+        <div>
+          <h1><i class="fa-solid fa-chart-pie"></i> Analytics</h1>
+          <p>A snapshot of everything happening across the firm.</p>
+        </div>
+        <!-- Period filter, Export CSV and Print buttons are added here by analytics.js -->
+      </div>
+
+      <!-- ===================== ANALYTICS (rendered by analytics.js) ===================== -->
+      <div id="analyticsRoot">
+        <div class="an-empty"><i class="fa-solid fa-spinner fa-spin"></i><span>Loading analytics...</span></div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ===================== SCRIPTS ===================== -->
+  <script src="JS/storage.js"></script>
+  <script src="JS/demo-data.js"></script>
+  <script src="JS/auth.js"></script>
+  <script src="JS/modal.js"></script>
+  <script src="JS/navigation.js"></script>
+  <script src="JS/ai-assistant.js"></script>
+  <script src="JS/doc-intelligence.js"></script>
+  <script src="JS/case-intelligence.js"></script>
+  <script src="JS/account.js"></script>
+  <script src="JS/analytics.js"></script>
+</body>
+</html>

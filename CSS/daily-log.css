@@ -1,0 +1,223 @@
+/* ============================================================
+   ABANTO LAW FIRM — DAILY-LOG.CSS  (V3 · Midnight / Gold)
+   Daily Tasks Description Tracker: header grid, editor table
+   (dynamic rows with inputs), read-only view, summary heading,
+   Save Draft / Submit row.
+   Uses the v3 palette variables — no hard-coded old colors,
+   works in Dark mode.
+   ============================================================ */
+
+/* ---------- STATUS CELL ---------- */
+.daily-log-status-cell {
+  white-space: nowrap;
+}
+
+/* ---------- HEADER GRID (Date / Paralegal / Supervising Lawyer) ---------- */
+.daily-log-header-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 6px;
+}
+
+/* ---------- READ-ONLY FIELDS ---------- */
+.daily-log-view-field {
+  margin-bottom: 14px;
+}
+.daily-log-view-field label {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .7px;
+  color: var(--color-gold-dark);
+  margin-bottom: 6px;
+}
+.daily-log-view-field p {
+  font-size: 13.5px;
+  color: var(--color-black);
+  line-height: 1.6;
+  background: var(--color-gray-bg);
+  border: 1px solid var(--color-gray-border);
+  padding: 10px 12px;
+  border-radius: 12px;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+/* ============================================================
+   EDITOR TABLE (dynamic rows)
+   ============================================================ */
+.daily-log-table-wrapper {
+  border: 1px solid var(--color-gray-border);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  background: var(--card-bg);
+}
+
+.daily-log-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+}
+.daily-log-table thead th {
+  background: var(--color-gray-bg);
+  color: var(--color-gray-text);
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  padding: 11px 8px;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--color-gray-border);
+}
+.daily-log-table thead th:first-child {
+  text-align: center;
+}
+.daily-log-table tbody td {
+  padding: 6px;
+  border-bottom: 1px solid var(--color-gray-border);
+  vertical-align: top;
+  background: var(--card-bg);
+}
+.daily-log-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.daily-log-table tbody tr:hover td {
+  background: var(--row-hover);
+}
+
+/* row number */
+.daily-log-table tbody tr td:first-child {
+  text-align: center;
+  padding-top: 11px;
+}
+.daily-log-table tbody tr td:first-child:not(:empty) {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: var(--color-gold-dark);
+}
+
+.daily-log-table input,
+.daily-log-table textarea {
+  width: 100%;
+  border: 1px solid transparent;
+  background: var(--color-gray-bg);
+  border-radius: 8px;
+  padding: 7px 9px;
+  font-size: 12.5px;
+  font-family: inherit;
+  color: var(--color-black);
+  resize: vertical;
+  min-height: 34px;
+  transition: border-color .2s ease, background .2s ease, box-shadow .2s ease;
+}
+.daily-log-table input:focus,
+.daily-log-table textarea:focus {
+  outline: none;
+  border-color: var(--color-gold);
+  background: var(--card-bg);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+.daily-log-table input[type="time"] {
+  min-width: 100px;
+}
+
+.daily-log-remove-row-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(217, 83, 79, .08);
+  color: var(--color-danger);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  margin-top: 6px;
+  transition: background .2s ease, color .2s ease, transform .2s ease;
+}
+.daily-log-remove-row-btn:hover {
+  background: var(--color-danger);
+  color: #fff;
+  transform: scale(1.06);
+}
+
+/* ---------- VIEW-ONLY TABLE ---------- */
+#viewLogRowsBody td {
+  padding: 10px 8px;
+  font-size: 12.5px;
+  border-bottom: 1px solid var(--color-gray-border);
+  color: var(--color-black);
+}
+#viewLogRowsBody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ---------- SUMMARY HEADING ---------- */
+.daily-log-summary-heading {
+  font-size: 14px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  color: var(--color-black);
+}
+.daily-log-summary-heading i {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--primary-soft);
+  color: var(--color-gold-dark);
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- ACTION ROW (Save Draft / Submit) ---------- */
+.daily-log-action-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.daily-log-action-row button {
+  flex: 1;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  .daily-log-header-grid {
+    grid-template-columns: 1fr;
+  }
+  .daily-log-action-row {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 600px) {
+  /* editor rows become cards (shared.css) — inputs full width */
+  .daily-log-table {
+    min-width: 0;
+  }
+  .daily-log-table-wrapper {
+    border: none;
+    background: transparent;
+  }
+  .daily-log-table tbody td {
+    background: transparent;
+    padding: 6px 0;
+  }
+  .daily-log-table tbody td > input,
+  .daily-log-table tbody td > textarea {
+    flex: 1;
+  }
+  .daily-log-remove-row-btn {
+    margin: 0 0 0 auto;
+    width: 36px;
+    height: 36px;
+  }
+}

@@ -1,0 +1,624 @@
+/* ============================================================
+   CASEFLOW — CONTROL-PANEL.CSS
+   Page-specific styles for control-panel.html: pending account
+   approvals panel, view-pending modal, account list + detail
+   panel (profile box with online status, role switcher, access
+   control checklist, activity log timeline). Reuses shared.css
+   variables/buttons/badges, layout.css sidebar/topnav.
+   ============================================================ */
+
+/* ============================================================
+   PENDING ACCOUNT APPROVALS
+   ============================================================ */
+.cp-pending-panel {
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+  padding: 20px 22px;
+  margin-bottom: 24px;
+  border-left: 3px solid var(--color-warning);
+}
+
+.cp-pending-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.cp-pending-header h3 {
+  font-size: 14.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.cp-pending-header h3 i {
+  color: var(--color-warning);
+}
+
+.cp-pending-count-badge {
+  background: var(--color-warning);
+  color: var(--color-white);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+
+.cp-pending-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cp-pending-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: rgba(184, 134, 11, 0.06);
+  border: 1px solid rgba(184, 134, 11, 0.2);
+  border-radius: var(--radius-sm);
+  flex-wrap: wrap;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+.cp-pending-row:hover {
+  background: rgba(184, 134, 11, 0.11);
+}
+
+.cp-pending-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-gold-light), var(--color-gold-dark));
+  color: var(--color-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.cp-pending-info {
+  flex: 1;
+  min-width: 160px;
+}
+.cp-pending-info .pending-name {
+  font-size: 13.5px;
+  font-weight: 600;
+}
+.cp-pending-info .pending-meta {
+  font-size: 11.5px;
+  color: var(--color-gray-text);
+  margin-top: 2px;
+}
+
+.cp-pending-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.cp-pending-actions button {
+  font-size: 12px;
+  padding: 8px 14px;
+}
+
+/* ============================================================
+   VIEW PENDING ACCOUNT MODAL
+   ============================================================ */
+.cp-view-pending-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--color-gray-border);
+  margin-bottom: 18px;
+}
+
+.cp-view-pending-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-gold-light), var(--color-gold-dark));
+  color: var(--color-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.cp-view-pending-header h3 {
+  font-size: 17px;
+}
+
+.cp-view-pending-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+/* ============================================================
+   SHELL (two-panel layout)
+   ============================================================ */
+.cp-shell {
+  display: flex;
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+  min-height: 600px;
+}
+
+/* ============================================================
+   ACCOUNT LIST PANEL
+   ============================================================ */
+.cp-account-list {
+  width: 300px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--color-gray-border);
+  display: flex;
+  flex-direction: column;
+}
+
+.cp-account-list-search {
+  padding: 16px;
+  border-bottom: 1px solid var(--color-gray-border);
+}
+.cp-account-list-search .search-box {
+  max-width: none;
+}
+
+.cp-account-items {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.cp-account-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--color-gray-border);
+  transition: background var(--transition-fast);
+  position: relative;
+}
+.cp-account-item:hover {
+  background: var(--color-gray-bg);
+}
+.cp-account-item.active {
+  background: rgba(212, 175, 55, 0.1);
+  border-left: 3px solid var(--color-gold);
+}
+
+.cp-account-avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.cp-account-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-gold-light), var(--color-gold-dark));
+  color: var(--color-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.cp-account-avatar.locked {
+  background: linear-gradient(135deg, #b0433a, #7a2318);
+  color: var(--color-white);
+}
+
+/* ---------- ONLINE STATUS DOT (NEW) — small version for list rows ---------- */
+.cp-online-dot-sm {
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--color-gray-text);
+  border: 2px solid var(--color-white);
+}
+.cp-online-dot-sm.online {
+  background: var(--color-success);
+}
+
+.cp-account-info {
+  flex: 1;
+  min-width: 0;
+}
+.cp-account-info .cp-account-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cp-account-info .cp-account-role {
+  font-size: 11px;
+  color: var(--color-gold-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.cp-lock-indicator {
+  color: var(--color-danger);
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   DETAIL PANEL
+   ============================================================ */
+.cp-detail-panel {
+  flex: 1;
+  padding: 26px;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+.cp-empty-state {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-gray-text);
+  gap: 12px;
+}
+.cp-empty-state i {
+  font-size: 44px;
+  color: var(--color-gold);
+  opacity: 0.5;
+}
+.cp-empty-state p {
+  font-size: 13.5px;
+}
+
+/* ---------- PROFILE BOX ---------- */
+.cp-profile-box {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--color-gray-border);
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.cp-profile-avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.cp-profile-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-gold-light), var(--color-gold-dark));
+  color: var(--color-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+/* ---------- ONLINE STATUS DOT (NEW) — large version for the profile box ---------- */
+.cp-online-dot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-gray-text);
+  border: 3px solid var(--color-white);
+}
+.cp-online-dot.online {
+  background: var(--color-success);
+}
+
+.cp-online-label {
+  font-size: 11.5px;
+  color: var(--color-gray-text);
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.cp-online-label.online {
+  color: var(--color-success);
+  font-weight: 600;
+}
+
+.cp-profile-info {
+  flex: 1;
+  min-width: 180px;
+}
+.cp-profile-info h2 {
+  font-size: 19px;
+}
+.cp-profile-tags {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.cp-profile-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.cp-profile-actions button {
+  font-size: 12.5px;
+  padding: 9px 14px;
+}
+
+.cp-profile-actions #cpLockToggleBtn.is-locked {
+  background: rgba(46, 125, 50, 0.1);
+  color: var(--color-success);
+  border-color: var(--color-success);
+}
+
+/* ---------- META ROW ---------- */
+.cp-profile-meta-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.cp-meta-item label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-gold-dark);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.cp-meta-item p {
+  font-size: 13.5px;
+  color: #333;
+}
+
+/* ============================================================
+   ROLE SWITCHER BOX (NEW)
+   ============================================================ */
+.cp-role-switch-box {
+  background: rgba(212, 175, 55, 0.06);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  margin-bottom: 24px;
+}
+
+.cp-role-switch-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+.cp-role-switch-row .input-group {
+  flex: 1;
+  min-width: 180px;
+  margin-bottom: 0;
+}
+.cp-role-switch-row button {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   TABS
+   ============================================================ */
+.cp-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--color-gray-border);
+  margin-bottom: 20px;
+}
+.cp-tab-btn {
+  background: transparent;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-gray-text);
+  border-bottom: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all var(--transition-fast);
+}
+.cp-tab-btn:hover {
+  color: var(--color-black);
+}
+.cp-tab-btn.active {
+  color: var(--color-gold-dark);
+  border-bottom-color: var(--color-gold);
+}
+
+/* ============================================================
+   ACCESS CONTROL CHECKLIST
+   ============================================================ */
+.cp-access-checklist {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.cp-access-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--color-gray-bg);
+  border-radius: var(--radius-sm);
+  border: 1.5px solid transparent;
+  transition: all var(--transition-fast);
+}
+.cp-access-item.checked {
+  background: rgba(212, 175, 55, 0.08);
+  border-color: rgba(212, 175, 55, 0.4);
+}
+
+.cp-access-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-gold-dark);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.cp-access-item i {
+  color: var(--color-gold-dark);
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.cp-access-item label {
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  flex: 1;
+}
+
+.cp-access-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.cp-access-actions button {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* ============================================================
+   ACTIVITY LOG
+   ============================================================ */
+.cp-activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.cp-activity-item {
+  display: flex;
+  gap: 14px;
+  padding: 13px 4px;
+  border-bottom: 1px solid var(--color-gray-border);
+}
+.cp-activity-item:last-child {
+  border-bottom: none;
+}
+
+.cp-activity-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(212, 175, 55, 0.12);
+  color: var(--color-gold-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.cp-activity-content {
+  flex: 1;
+  min-width: 0;
+}
+.cp-activity-desc {
+  font-size: 13px;
+  color: #333;
+  line-height: 1.4;
+}
+.cp-activity-time {
+  font-size: 11px;
+  color: var(--color-gray-text);
+  margin-top: 3px;
+}
+
+.cp-activity-empty {
+  text-align: center;
+  padding: 50px 20px;
+  color: var(--color-gray-text);
+}
+.cp-activity-empty i {
+  font-size: 36px;
+  margin-bottom: 12px;
+  opacity: 0.4;
+  display: block;
+}
+.cp-activity-empty p {
+  font-size: 12.5px;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+  .cp-shell {
+    flex-direction: column;
+  }
+  .cp-account-list {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--color-gray-border);
+    max-height: 280px;
+  }
+}
+
+@media (max-width: 600px) {
+  .cp-profile-box {
+    flex-direction: column;
+    text-align: center;
+  }
+  .cp-profile-actions {
+    width: 100%;
+  }
+  .cp-profile-actions button {
+    flex: 1;
+  }
+  .cp-access-actions {
+    flex-direction: column;
+  }
+  .cp-access-actions button {
+    min-width: 0;
+  }
+  .cp-pending-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .cp-pending-actions {
+    width: 100%;
+  }
+  .cp-pending-actions button {
+    flex: 1;
+  }
+  .cp-view-pending-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  .cp-role-switch-row {
+    flex-direction: column;
+  }
+  .cp-role-switch-row .input-group {
+    min-width: 0;
+  }
+}

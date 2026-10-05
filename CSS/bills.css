@@ -1,0 +1,279 @@
+/* ============================================================
+   ABANTO LAW FIRM — BILLS.CSS  (V3 · Midnight / Gold)
+   Bill table cells (name, category, ₱ amount, due date),
+   Files button, Receipt Scan (OCR) button / progress /
+   scanned-receipt chip, Bill Document Manager.
+   Uses the v3 palette variables — no hard-coded old colors,
+   works in Dark mode.
+   ============================================================ */
+
+/* ---------- BILL NAME ---------- */
+.bill-name-cell {
+  font-weight: 800;
+  color: var(--color-black);
+}
+
+/* ---------- CATEGORY BADGE ---------- */
+.bill-category-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 7px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: capitalize;
+  background: rgba(182, 165, 123, .20);        /* khaki */
+  color: #6F6342;
+  border: 1px solid rgba(182, 165, 123, .35);
+  white-space: nowrap;
+}
+.bill-category-badge i {
+  font-size: 10px;
+  color: var(--color-gold-dark);
+}
+html[data-theme="dark"] .bill-category-badge {
+  color: #D9CBA4;
+}
+
+/* ---------- AMOUNT (₱) ---------- */
+.bill-amount-cell {
+  font-weight: 800;
+  color: var(--color-black);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* ---------- DUE DATE ---------- */
+.bill-due-date-cell {
+  white-space: nowrap;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-soft);
+}
+
+/* ---------- FILES BUTTON ---------- */
+.cell-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 12px;
+  border-radius: 10px;
+  background: var(--color-gray-bg);
+  border: 1px solid var(--color-gray-border);
+  color: var(--color-black);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background .2s ease, border-color .2s ease, color .2s ease, transform .2s ease;
+}
+.cell-action-btn i {
+  color: var(--color-gold-dark);
+  transition: color .2s ease;
+}
+.cell-action-btn:hover {
+  background: var(--tile-orange);
+  border-color: transparent;
+  color: #fff;
+  transform: translateY(-1px);
+}
+.cell-action-btn:hover i {
+  color: #fff;
+}
+.cell-action-btn .count-badge {
+  background: var(--color-black);
+  color: #fff;
+  border-radius: 999px;
+  padding: 1px 7px;
+  font-size: 10.5px;
+  font-weight: 700;
+  min-width: 20px;
+  text-align: center;
+}
+.cell-action-btn:hover .count-badge {
+  background: rgba(255, 255, 255, .28);
+  color: #fff;
+}
+
+/* ============================================================
+   RECEIPT SCAN (OCR)
+   ============================================================ */
+.smart-scan-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border-radius: 12px;
+  background: var(--tile-orange);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 6px 16px rgba(201, 147, 26, .30);
+  transition: background .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+.smart-scan-btn:hover {
+  background: var(--color-black);
+  color: var(--color-gold);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(19, 13, 29, .25);
+}
+
+.ocr-processing-box {
+  text-align: center;
+  padding: 40px 24px;
+}
+.ocr-processing-box .ocr-spinner {
+  width: 54px;
+  height: 54px;
+  border: 4px solid var(--color-gray-border);
+  border-top-color: var(--color-gold);
+  border-right-color: var(--color-black);
+  border-radius: 50%;
+  margin: 0 auto 18px;
+  animation: billOcrSpin .8s linear infinite;
+}
+@keyframes billOcrSpin {
+  to { transform: rotate(360deg); }
+}
+.ocr-processing-box h3 {
+  font-size: 15px;
+  font-weight: 800;
+  margin-bottom: 6px;
+  color: var(--color-black);
+}
+.ocr-processing-box p {
+  font-size: 12.5px;
+  color: var(--color-gray-text);
+}
+.ocr-progress-bar-track {
+  width: 100%;
+  max-width: 300px;
+  height: 8px;
+  background: var(--color-gray-bg);
+  border: 1px solid var(--color-gray-border);
+  border-radius: 999px;
+  margin: 16px auto 0;
+  overflow: hidden;
+}
+.ocr-progress-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--tile-orange);
+  border-radius: 999px;
+  transition: width .2s ease;
+}
+
+/* ---------- scanned receipt chip ---------- */
+.scanned-receipt-preview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  background: rgba(62, 142, 79, .08);
+  border: 1px solid rgba(62, 142, 79, .25);
+  border-left: 4px solid var(--color-success);
+  border-radius: 12px;
+}
+.scanned-receipt-preview i.fa-file-circle-check {
+  color: var(--color-success);
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.scanned-receipt-preview span {
+  flex: 1;
+  min-width: 0;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--color-black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============================================================
+   BILL DOCUMENTS MODAL
+   ============================================================ */
+.doc-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  max-width: 260px;
+  color: var(--color-black);
+}
+.doc-name-cell > i {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: var(--primary-soft);
+  color: var(--color-gold-dark);
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.doc-name-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.doc-type-badge {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .4px;
+  text-transform: uppercase;
+  color: var(--color-gold-dark);
+  background: var(--primary-soft);
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+#viewBillDocBody img {
+  max-width: 100%;
+  max-height: 65vh;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-medium);
+}
+#viewBillDocBody iframe {
+  width: 100%;
+  height: 65vh;
+  border: 1px solid var(--color-gray-border);
+  border-radius: var(--radius-md);
+}
+.doc-preview-unavailable {
+  padding: 50px 20px;
+  color: var(--color-gray-text);
+}
+.doc-preview-unavailable i {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 14px;
+  border-radius: 20px;
+  background: var(--primary-soft);
+  color: var(--color-gold-dark);
+  font-size: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 600px) {
+  .doc-name-cell {
+    max-width: none;
+  }
+  .doc-name-text {
+    white-space: normal;
+  }
+  .bill-amount-cell {
+    font-size: 14.5px;
+  }
+  .smart-scan-btn {
+    width: 100%;
+  }
+}

@@ -1,0 +1,316 @@
+/* ============================================================
+   CASEFLOW — LOGIN PAGE (index.html)  (V3 · Clean Admin · Gold)
+   Split screen with a SLOPED divider:
+     LEFT  ~70%  image + dark/gold overlay + tagline
+     RIGHT ~30%  plain white, login form fixed on it (no card)
+   A thin gold stripe follows the slope.
+   Global variables/buttons/inputs/modals come from shared.css.
+   ============================================================ */
+
+:root {
+  --login-img-w: 72vw;      /* image width at the TOP edge */
+  --login-slope: 9vw;       /* how far the slope leans in at the bottom */
+  --login-stripe: 6px;      /* gold line thickness */
+}
+
+html, body {
+  height: 100%;
+}
+body {
+  background: #fdfcf9;      /* light / white side */
+  overflow: hidden;         /* fixed split — no page scroll on desktop */
+}
+
+/* ============================================================
+   GOLD STRIPE (sits right behind the image, same slope)
+   ============================================================ */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: calc(var(--login-img-w) + var(--login-stripe));
+  background: var(--gradient-accent);
+  clip-path: polygon(0 0, 100% 0, calc(100% - var(--login-slope)) 100%, 0 100%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ============================================================
+   LEFT — IMAGE (sloped edge)
+   ============================================================ */
+.login-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--login-img-w);
+  z-index: 1;
+  clip-path: polygon(0 0, 100% 0, calc(100% - var(--login-slope)) 100%, 0 100%);
+  background:
+    linear-gradient(135deg, rgba(17, 24, 39, 0.78) 0%, rgba(17, 24, 39, 0.45) 55%, rgba(168, 134, 42, 0.55) 100%),
+    url('../IMG/background.jpg') center / cover no-repeat,
+    linear-gradient(135deg, #1f2937, #a8862a);
+}
+
+/* small gold accent bar above the tagline */
+.login-bg::before {
+  content: '';
+  position: absolute;
+  left: 60px;
+  bottom: 170px;
+  width: 64px;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--gradient-accent);
+}
+
+/* tagline bottom-left */
+.login-bg::after {
+  content: 'CaseFlow\A Legal Case Management';
+  white-space: pre;
+  position: absolute;
+  left: 60px;
+  bottom: 70px;
+  color: var(--color-white);
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1.4;
+  letter-spacing: 0.4px;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================================
+   RIGHT — WHITE SIDE (form fixed here, no card)
+   ============================================================ */
+.login-wrapper {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 30vw;
+  z-index: 2;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 36px 40px 28px;
+  overflow-y: hidden;
+}
+
+/* the card is flat — just content on white */
+.login-card,
+.login-card.glass {
+  width: 100%;
+  max-width: 340px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* ---------- BRAND ---------- */
+.brand {
+  text-align: left;
+  margin-bottom: 28px;
+}
+.brand-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--gradient-accent);
+  color: var(--on-accent);
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  box-shadow: 0 8px 20px rgba(201, 162, 39, 0.32);
+  filter: none;
+}
+.brand h1 {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  color: var(--color-black);
+}
+.brand h1 span {
+  color: var(--color-gold-dark);
+}
+.brand-sub {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--color-gray-text);
+  text-transform: none;
+  letter-spacing: 0;
+}
+.brand::after {
+  content: 'Welcome back! Please sign in to continue.';
+  display: block;
+  margin-top: 16px;
+  font-size: 12.5px;
+  color: var(--color-gray-text);
+  padding: 10px 12px;
+  background: var(--primary-soft);
+  border-left: 3px solid var(--color-gold);
+  border-radius: 6px;
+}
+
+/* ---------- FORM ---------- */
+.login-form .input-group {
+  margin-bottom: 16px;
+  background: var(--color-white);
+}
+.login-form .input-group input {
+  padding-top: 13px;
+  padding-bottom: 13px;
+}
+
+.login-form .btn-primary {
+  margin-top: 6px;
+  padding: 13px 22px;
+  font-size: 14px;
+  letter-spacing: 0.6px;
+  border-radius: 10px;
+}
+
+/* ---------- LINKS ROW ---------- */
+.login-links {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+  font-size: 13px;
+}
+.login-links a {
+  font-weight: 600;
+  color: var(--color-gold-dark);
+}
+.login-links a:hover {
+  color: var(--color-black);
+  text-decoration: underline;
+}
+
+/* ---------- FOOTER ---------- */
+.login-footer {
+  margin-top: 34px;
+  width: 100%;
+  max-width: 340px;
+  text-align: left;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-gray-border);
+}
+.login-footer p {
+  font-size: 11.5px;
+  color: var(--color-gray-text);
+}
+
+/* Register / Forgot modals above everything */
+.modal-overlay {
+  z-index: 1000;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+/* smaller laptops: 62 / 38 so the form isn't cramped */
+@media (max-width: 1150px) {
+  :root {
+    --login-img-w: 64vw;
+    --login-slope: 8vw;
+  }
+  .login-wrapper {
+    width: 38vw;
+  }
+  .login-bg::after {
+    font-size: 28px;
+    left: 44px;
+    bottom: 60px;
+  }
+  .login-bg::before {
+    left: 44px;
+    bottom: 145px;
+  }
+}
+
+/* tablets / phones: image on TOP (sloped bottom), white form BELOW — no floating */
+@media (max-width: 860px) {
+  body {
+    overflow: auto;
+    background: #fdfcf9;
+  }
+
+  body::before {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: auto;
+    width: 100%;
+    height: calc(38vh + var(--login-stripe));
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 9vw), 0 100%);
+  }
+
+  .login-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: auto;
+    width: 100%;
+    height: 38vh;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 9vw), 0 100%);
+  }
+  .login-bg::before {
+    left: 24px;
+    bottom: calc(9vw + 74px);
+    width: 44px;
+    height: 3px;
+  }
+  .login-bg::after {
+    font-size: 20px;
+    left: 24px;
+    bottom: calc(9vw + 16px);
+  }
+
+  .login-wrapper {
+    position: relative;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    width: 100%;
+    min-height: 62vh;
+    margin-top: 38vh;
+    padding: 28px 24px 36px;
+    justify-content: flex-start;
+    overflow: visible;
+  }
+  .login-card,
+  .login-card.glass {
+    max-width: 420px;
+  }
+  .login-footer {
+    max-width: 420px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-bg::after {
+    font-size: 17px;
+  }
+  .brand h1 {
+    font-size: 19px;
+  }
+  .brand-icon {
+    width: 46px;
+    height: 46px;
+    font-size: 19px;
+    margin-bottom: 14px;
+  }
+}

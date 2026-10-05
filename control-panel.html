@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Control Panel | CaseFlow</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<link rel="stylesheet" href="CSS/shared.css">
+<link rel="stylesheet" href="CSS/layout.css">
+<link rel="stylesheet" href="CSS/control-panel.css">
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <div id="sidebarMount"></div>
+    <header id="topnavMount"></header>
+
+    <main class="main-content">
+
+      <div class="page-heading">
+        <div>
+          <h1><i class="fa-solid fa-user-shield"></i> Control Panel</h1>
+          <p>Create and manage every account — info, passwords, roles, access and activity. Attorney only.</p>
+        </div>
+        <!-- "Add Account" button is added here by account-manager.js -->
+      </div>
+
+      <!-- ===================== PENDING ACCOUNT APPROVALS ===================== -->
+      <div class="cp-pending-panel" id="cpPendingPanel" style="display:none;">
+        <div class="cp-pending-header">
+          <h3><i class="fa-solid fa-user-clock"></i> Pending Account Approvals</h3>
+          <span class="cp-pending-count-badge" id="cpPendingCountBadge">0</span>
+        </div>
+        <div class="cp-pending-list" id="cpPendingList">
+          <!-- Injected by control-panel.js -->
+        </div>
+      </div>
+
+      <!-- ===================== CONTROL PANEL SHELL (account list + detail) ===================== -->
+      <div class="cp-shell">
+
+        <!-- ---------- ACCOUNT LIST PANEL ---------- -->
+        <aside class="cp-account-list">
+          <div class="cp-account-list-search">
+            <div class="search-box">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="cpAccountSearchInput" placeholder="Search accounts...">
+            </div>
+          </div>
+          <div class="cp-account-items" id="cpAccountItems">
+            <!-- Injected by control-panel.js — each row also shows Online/last-seen dot -->
+          </div>
+        </aside>
+
+        <!-- ---------- ACCOUNT DETAIL PANEL ---------- -->
+        <section class="cp-detail-panel">
+
+          <div class="cp-empty-state" id="cpEmptyState">
+            <i class="fa-solid fa-user-shield"></i>
+            <p>Select an account from the list to manage it, or click <b>Add Account</b> to create a new one.</p>
+          </div>
+
+          <div class="cp-detail-content" id="cpDetailContent" style="display:none;">
+
+            <!-- ---------- PROFILE BOX ---------- -->
+            <div class="cp-profile-box">
+              <div class="cp-profile-avatar-wrap">
+                <div class="cp-profile-avatar" id="cpProfileAvatar"></div>
+                <span class="cp-online-dot" id="cpOnlineDot" title="Online"></span>
+              </div>
+              <div class="cp-profile-info">
+                <h2 id="cpProfileName"></h2>
+                <p id="cpProfileUsername" class="text-muted"></p>
+                <div class="cp-profile-tags">
+                  <span class="badge" id="cpProfileRoleBadge"></span>
+                  <span class="badge" id="cpProfileStatusBadge"></span>
+                </div>
+                <p class="cp-online-label" id="cpOnlineLabel"></p>
+              </div>
+              <div class="cp-profile-actions">
+                <!-- "Edit Info" + "Reset Password" are added here by account-manager.js -->
+                <button class="btn-outline" id="cpLockToggleBtn"><i class="fa-solid fa-lock"></i> Lock Account</button>
+                <button class="btn-danger" id="cpDeleteAccountBtn"><i class="fa-solid fa-trash"></i> Delete Account</button>
+              </div>
+            </div>
+
+            <div class="cp-profile-meta-row">
+              <div class="cp-meta-item">
+                <label>Email</label>
+                <p id="cpProfileEmail"></p>
+              </div>
+              <div class="cp-meta-item">
+                <label>Date Joined</label>
+                <p id="cpProfileJoined"></p>
+              </div>
+            </div>
+
+            <!-- ---------- ROLE SWITCHER ---------- -->
+            <div class="cp-role-switch-box" id="cpRoleSwitchBox">
+              <label class="field-label"><i class="fa-solid fa-user-gear"></i> Change Role</label>
+              <div class="cp-role-switch-row">
+                <div class="input-group">
+                  <i class="fa-solid fa-user-tag"></i>
+                  <select id="cpRoleSelect">
+                    <option value="head">Head</option>
+                    <option value="it">IT Staff</option>
+                    <option value="employee">Employee / Paralegal</option>
+                  </select>
+                </div>
+                <button class="btn-primary" id="cpSaveRoleBtn"><i class="fa-solid fa-check"></i> Update Role</button>
+              </div>
+              <p class="text-muted" style="font-size:11.5px; margin-top:8px;">
+                <i class="fa-solid fa-circle-info"></i> Attorney accounts cannot be changed to or from this account.
+              </p>
+            </div>
+
+            <!-- ---------- TABS: Access Control / Activity Log ---------- -->
+            <div class="cp-tabs">
+              <button class="cp-tab-btn active" data-cp-tab="access"><i class="fa-solid fa-sliders"></i> Access Control</button>
+              <button class="cp-tab-btn" data-cp-tab="activity"><i class="fa-solid fa-clock-rotate-left"></i> Activity Log</button>
+            </div>
+
+            <!-- ---------- ACCESS CONTROL TAB ---------- -->
+            <div class="cp-tab-panel" id="cpTabAccess">
+              <p class="text-muted" style="font-size:12.5px; margin-bottom:14px;">
+                Choose exactly which pages this account can see and open. Unchecked pages are completely hidden from their sidebar and top navigation.
+              </p>
+              <div class="cp-access-checklist" id="cpAccessChecklist">
+                <!-- Injected by control-panel.js -->
+              </div>
+              <div class="cp-access-actions">
+                <button class="btn-outline" id="cpResetAccessBtn"><i class="fa-solid fa-rotate-left"></i> Reset to Default (All Pages)</button>
+                <button class="btn-primary" id="cpSaveAccessBtn"><i class="fa-solid fa-floppy-disk"></i> Save Access Settings</button>
+              </div>
+            </div>
+
+            <!-- ---------- ACTIVITY LOG TAB ---------- -->
+            <div class="cp-tab-panel" id="cpTabActivity" style="display:none;">
+              <div class="cp-activity-list" id="cpActivityList">
+                <!-- Injected by control-panel.js -->
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ===================== VIEW PENDING ACCOUNT MODAL ===================== -->
+  <div class="modal-overlay" id="cpViewPendingModalOverlay">
+    <div class="modal-box glass">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-user-clock"></i> Pending Account Details</h2>
+        <button class="modal-close" id="cpCloseViewPendingModal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="cp-view-pending-header">
+          <div class="cp-view-pending-avatar" id="cpViewPendingAvatar"></div>
+          <div>
+            <h3 id="cpViewPendingName"></h3>
+            <p class="text-muted" id="cpViewPendingUsername"></p>
+          </div>
+        </div>
+
+        <div class="cp-view-pending-fields">
+          <div class="cp-meta-item">
+            <label>Email</label>
+            <p id="cpViewPendingEmail"></p>
+          </div>
+          <div class="cp-meta-item">
+            <label>Requested Role</label>
+            <p id="cpViewPendingRole"></p>
+          </div>
+          <div class="cp-meta-item">
+            <label>Registered</label>
+            <p id="cpViewPendingRegistered"></p>
+          </div>
+        </div>
+
+        <input type="hidden" id="cpViewPendingUserId">
+
+        <div class="cp-pending-actions" style="margin-top:20px;">
+          <button class="btn-outline" id="cpViewPendingRejectBtn"><i class="fa-solid fa-xmark"></i> Reject</button>
+          <button class="btn-primary" id="cpViewPendingApproveBtn"><i class="fa-solid fa-check"></i> Approve</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== SCRIPTS ===================== -->
+  <script src="JS/storage.js"></script>
+  <script src="JS/demo-data.js"></script>
+  <script src="JS/auth.js"></script>
+  <script src="JS/modal.js"></script>
+  <script src="JS/navigation.js"></script>
+  <script src="JS/ai-assistant.js"></script>
+  <script src="JS/doc-intelligence.js"></script>
+  <script src="JS/case-intelligence.js"></script>
+  <script src="JS/control-panel.js"></script>
+  <script src="JS/cp-avatars.js"></script>
+  <script src="JS/bulk-sellect.js"></script>
+   <script src="JS/trash-bin.js"></script>
+  <script src="JS/account-manager.js"></script>
+  <script src="JS/account.js"></script>
+</body>
+</html>

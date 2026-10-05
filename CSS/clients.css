@@ -1,0 +1,449 @@
+/* ============================================================
+   CASEFLOW — CLIENTS.CSS  (V3 · Midnight / Gold)
+   Client card grid, View Client modal (linked cases),
+   Share / Portal Access controls (toggle, code, link).
+   Uses the v3 palette variables from shared.css — no
+   hard-coded old colors, works in Dark mode.
+   ============================================================ */
+
+/* ---------- CLIENTS GRID ---------- */
+.clients-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 18px;
+}
+
+#noClientsMsg {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 56px 20px;
+  color: var(--color-gray-text);
+  background: var(--card-bg);
+  border: 1px dashed var(--color-gray-border);
+  border-radius: var(--radius-lg);
+}
+
+/* ---------- CLIENT CARD ---------- */
+.client-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--card-bg);
+  border: 1px solid var(--color-gray-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  padding: 20px;
+  overflow: hidden;
+  transition: transform .25s var(--ease-out, ease), box-shadow .25s ease, border-color .25s ease;
+}
+/* gold strip on top — same gold as the Total Cases tile */
+.client-card::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 4px;
+  background: var(--tile-orange);
+}
+.client-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-gold);
+  box-shadow: 0 16px 34px rgba(19, 13, 29, .12);
+}
+
+/* locked-portal ribbon */
+.client-card.portal-locked::before {
+  content: 'PORTAL LOCKED';
+  position: absolute;
+  top: 14px;
+  right: -32px;
+  z-index: 2;
+  background: var(--color-danger);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .6px;
+  padding: 3px 36px;
+  transform: rotate(40deg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .2);
+}
+
+.client-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 4px 0 16px;
+  min-width: 0;
+}
+.client-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--color-black);
+  color: var(--color-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 16px;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 3px var(--card-bg), 0 0 0 4px var(--color-gold);
+  overflow: hidden;
+}
+.client-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.client-card-header > div {
+  min-width: 0;
+}
+.client-card-header h3 {
+  font-size: 15.5px;
+  font-weight: 800;
+  color: var(--color-black);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.client-card-header .client-added-date {
+  font-size: 11.5px;
+  color: var(--color-gray-text);
+  margin-top: 2px;
+}
+
+.client-card-body {
+  flex: 1;
+  margin-bottom: 16px;
+}
+.client-info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-soft);
+  margin-bottom: 8px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.client-info-row i {
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  background: var(--primary-soft);
+  color: var(--color-gold-dark);
+  font-size: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.client-case-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--primary-soft);
+  color: var(--color-gold-dark);
+  padding: 5px 11px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+.client-card-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 14px;
+  border-top: 1px solid var(--color-gray-border);
+}
+.client-card-footer button {
+  flex: 1;
+  min-width: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px;
+  border-radius: 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+  background: var(--color-gray-bg);
+  border: 1px solid var(--color-gray-border);
+  color: var(--color-black);
+  transition: background .2s ease, color .2s ease, border-color .2s ease, transform .2s ease;
+}
+.client-card-footer button i {
+  color: var(--color-gold-dark);
+  transition: color .2s ease;
+}
+.client-card-footer button:hover {
+  background: var(--tile-orange);
+  border-color: transparent;
+  color: #fff;
+  transform: translateY(-1px);
+}
+.client-card-footer button:hover i {
+  color: #fff;
+}
+.client-card-footer button.danger i {
+  color: var(--color-danger);
+}
+.client-card-footer button.danger:hover {
+  background: var(--color-danger);
+  color: #fff;
+}
+.client-card-footer button.danger:hover i {
+  color: #fff;
+}
+
+/* ============================================================
+   VIEW CLIENT MODAL
+   ============================================================ */
+.client-detail-view .detail-section {
+  margin-bottom: 18px;
+}
+.client-detail-view .detail-section:last-child {
+  margin-bottom: 0;
+}
+.client-detail-view h4 {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .7px;
+  color: var(--color-gold-dark);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.client-detail-view p {
+  font-size: 13.5px;
+  color: var(--text-soft);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.client-detail-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  background: var(--color-gray-bg);
+  border: 1px solid var(--color-gray-border);
+  overflow: hidden;
+}
+.client-detail-header::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--tile-orange);
+}
+.client-detail-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--color-black);
+  color: var(--color-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 20px;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 3px var(--card-bg), 0 0 0 5px var(--color-gold);
+  overflow: hidden;
+}
+.client-detail-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.client-detail-header h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--color-black);
+}
+
+.client-linked-case {
+  background: var(--card-bg);
+  border: 1px solid var(--color-gray-border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  transition: border-color .2s ease, background .2s ease;
+}
+.client-linked-case:hover {
+  border-color: var(--color-gold);
+  background: var(--row-hover);
+}
+.client-linked-case-info {
+  font-size: 13px;
+  min-width: 0;
+}
+.client-linked-case-info strong {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--color-black);
+}
+.client-linked-case-info span {
+  color: var(--color-gray-text);
+  font-size: 12px;
+}
+
+/* ============================================================
+   PORTAL ACCESS CONTROLS (Share modal)
+   ============================================================ */
+.portal-lock-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  border: 1px solid var(--color-gray-border);
+  border-radius: 12px;
+  background: var(--color-gray-bg);
+}
+.portal-lock-row strong {
+  font-size: 13.5px;
+  display: block;
+  margin-bottom: 3px;
+  color: var(--color-black);
+}
+
+/* ---------- toggle switch ---------- */
+.portal-toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 26px;
+  flex-shrink: 0;
+}
+.portal-toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.portal-toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: var(--color-gray-border);
+  border-radius: 26px;
+  transition: background .25s ease;
+}
+.portal-toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  left: 3px;
+  bottom: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform .25s var(--ease-out, ease);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .25);
+}
+.portal-toggle-switch input:checked + .portal-toggle-slider {
+  background: var(--tile-orange);
+}
+.portal-toggle-switch input:checked + .portal-toggle-slider::before {
+  transform: translateX(20px);
+}
+.portal-toggle-switch input:focus-visible + .portal-toggle-slider {
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+/* lock toggle = red when ON */
+#portalLockToggle:checked + .portal-toggle-slider {
+  background: var(--color-danger);
+}
+
+/* ---------- current access code ---------- */
+.portal-current-code-box {
+  background: var(--primary-soft);
+  border: 1px dashed var(--color-gold);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-top: 4px;
+  text-align: center;
+}
+.portal-current-code {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: 6px;
+  color: var(--color-black);
+  margin-top: 4px;
+  font-family: 'Courier New', monospace;
+}
+
+/* ---------- share link ---------- */
+.portal-link-row input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--color-gray-border);
+  border-radius: 10px;
+  background: var(--color-gray-bg);
+  font-size: 12.5px;
+  color: var(--color-black);
+  font-family: 'Courier New', monospace;
+}
+.portal-link-row input:focus {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+
+.portal-link-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.portal-link-actions button {
+  flex: 1;
+  min-width: 110px;
+  font-size: 12.5px;
+  padding: 10px;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 600px) {
+  .clients-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .client-card {
+    padding: 16px;
+  }
+  .client-card-footer button {
+    min-width: 60px;
+    font-size: 11.5px;
+    min-height: 40px;
+  }
+  .client-detail-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  .client-detail-header::before {
+    width: auto;
+    height: 4px;
+    right: 0;
+    bottom: auto;
+  }
+}

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clients | CaseFlow</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<link rel="stylesheet" href="CSS/shared.css">
+<link rel="stylesheet" href="CSS/layout.css">
+<link rel="stylesheet" href="CSS/clients.css">
+<link rel="stylesheet" href="CSS/smart-routing.css">
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <div id="sidebarMount"></div>
+    <header id="topnavMount"></header>
+
+    <main class="main-content">
+
+      <div class="page-heading">
+        <div>
+          <h1><i class="fa-solid fa-users"></i> Clients</h1>
+          <p>Manage client records and their associated case information.</p>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn-outline" id="clientCustomFieldsBtn" title="Add/manage custom fields">
+            <i class="fa-solid fa-table-columns"></i> Custom Fields
+          </button>
+          <button class="btn-primary" id="addClientBtn">
+            <i class="fa-solid fa-user-plus"></i> Add Client
+          </button>
+        </div>
+      </div>
+
+      <!-- ===================== TOOLBAR ===================== -->
+      <div class="toolbar">
+        <div class="toolbar-left">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="clientSearchInput" placeholder="Search by name, email, contact number...">
+          </div>
+          <select class="sort-select" id="clientSortSelect">
+            <option value="az">Sort: A–Z</option>
+            <option value="za">Sort: Z–A</option>
+            <option value="newest">Date Added – Newest</option>
+            <option value="oldest">Date Added – Oldest</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- ===================== CLIENT CARDS GRID ===================== -->
+      <div class="clients-grid" id="clientsGrid">
+        <p class="text-muted" id="noClientsMsg">No clients yet. Click "Add Client" to create one.</p>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ===================== ADD / EDIT CLIENT MODAL ===================== -->
+  <div class="modal-overlay" id="clientModalOverlay">
+    <div class="modal-box glass">
+      <div class="modal-header">
+        <h2 id="clientModalTitle"><i class="fa-solid fa-user-plus"></i> Add Client</h2>
+        <button class="modal-close" id="closeClientModal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <form id="clientForm" autocomplete="off">
+          <input type="hidden" id="clientId">
+
+          <label class="field-label">Client Name</label>
+          <div class="input-group">
+            <i class="fa-solid fa-user"></i>
+            <input type="text" id="clientName" placeholder="Full name" required>
+          </div>
+
+          <label class="field-label">Contact Number</label>
+          <div class="input-group">
+            <i class="fa-solid fa-phone"></i>
+            <input type="text" id="clientContact" placeholder="e.g. 0917 123 4567" required>
+          </div>
+
+          <label class="field-label">Email</label>
+          <div class="input-group">
+            <i class="fa-solid fa-envelope"></i>
+            <input type="email" id="clientEmail" placeholder="client@email.com">
+          </div>
+
+          <label class="field-label">Address</label>
+          <div class="input-group">
+            <i class="fa-solid fa-location-dot"></i>
+            <input type="text" id="clientAddress" placeholder="Complete address">
+          </div>
+
+          <label class="field-label">Case Information</label>
+          <div class="input-group">
+            <i class="fa-solid fa-gavel"></i>
+            <textarea id="clientCaseInfo" placeholder="Brief case background or notes on why the client engaged the firm..."></textarea>
+          </div>
+
+          <label class="field-label">Notes</label>
+          <div class="input-group">
+            <i class="fa-solid fa-note-sticky"></i>
+            <textarea id="clientNotes" placeholder="Additional notes..."></textarea>
+          </div>
+
+          <!-- Custom field inputs injected here by clients.js, if any exist -->
+          <div id="clientCustomFieldsWrap"></div>
+
+          <div id="clientFormError" class="form-error"></div>
+
+          <button type="submit" class="btn-primary full-width">
+            <i class="fa-solid fa-floppy-disk"></i> Save Client
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== VIEW CLIENT MODAL ===================== -->
+  <div class="modal-overlay" id="viewClientModalOverlay">
+    <div class="modal-box glass">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-address-card"></i> Client Details</h2>
+        <button class="modal-close" id="closeViewClientModal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="client-detail-view" id="clientDetailView">
+          <!-- Content injected by clients.js -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== SHARE CLIENT PORTAL MODAL ===================== -->
+  <div class="modal-overlay" id="shareClientModalOverlay">
+    <div class="modal-box glass">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-share-nodes"></i> Client Portal — <span id="shareClientName"></span></h2>
+        <button class="modal-close" id="closeShareClientModal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="portal-lock-row">
+          <div>
+            <strong>Portal Lock</strong>
+            <p class="text-muted" style="font-size:12px;">When locked, the client cannot view the portal at all, even with a valid link.</p>
+          </div>
+          <label class="portal-toggle-switch">
+            <input type="checkbox" id="portalLockToggle">
+            <span class="portal-toggle-slider"></span>
+          </label>
+        </div>
+
+        <hr class="task-divider">
+
+        <label class="field-label">Access Duration (starting when you click Apply)</label>
+        <div class="input-group">
+          <i class="fa-solid fa-clock"></i>
+          <select id="portalDurationSelect">
+            <option value="1">1 hour</option>
+            <option value="2">2 hours</option>
+            <option value="6">6 hours</option>
+            <option value="24">24 hours</option>
+            <option value="0">No limit</option>
+          </select>
+        </div>
+
+        <div class="portal-lock-row" style="margin-top:4px;">
+          <div>
+            <strong>Require Access Code</strong>
+            <p class="text-muted" style="font-size:12px;">Adds a 6-digit code that changes every hour. Client must enter it to view the portal.</p>
+          </div>
+          <label class="portal-toggle-switch">
+            <input type="checkbox" id="portalCodeToggle">
+            <span class="portal-toggle-slider"></span>
+          </label>
+        </div>
+
+        <div id="portalCurrentCodeBox" class="portal-current-code-box" style="display:none;">
+          <span class="text-muted" style="font-size:12px;">Current code (auto-changes every hour):</span>
+          <div class="portal-current-code" id="portalCurrentCodeText">------</div>
+        </div>
+
+        <button class="btn-primary full-width" id="applyPortalSettingsBtn" style="margin-top:14px;">
+          <i class="fa-solid fa-floppy-disk"></i> Apply Access Settings
+        </button>
+
+        <hr class="task-divider">
+
+        <label class="field-label">Shareable Link</label>
+        <div class="portal-link-row">
+          <input type="text" id="clientShareLink" readonly>
+        </div>
+
+        <div class="portal-link-actions">
+          <button class="btn-secondary" id="copyClientShareLink" type="button">
+            <i class="fa-solid fa-copy"></i> Copy Link
+          </button>
+          <button class="btn-outline" id="openClientShareLink" type="button">
+            <i class="fa-solid fa-up-right-from-square"></i> Open Portal
+          </button>
+          <button class="btn-outline" id="regenerateClientShareLink" type="button">
+            <i class="fa-solid fa-rotate"></i> Regenerate Link
+          </button>
+        </div>
+
+        <p class="text-muted" style="font-size:11.5px; margin-top:10px;">
+          <i class="fa-solid fa-circle-info"></i>
+          This is a LocalStorage-only prototype — the link only works when opened in this same browser on this device. It will not work on another device until this app has a real backend.
+        </p>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== SCRIPTS ===================== -->
+  <script src="JS/storage.js"></script>
+  <script src="JS/demo-data.js"></script>
+  <script src="JS/auth.js"></script>
+  <script src="JS/modal.js"></script>
+  <script src="JS/navigation.js"></script>
+  <script src="JS/ai-assistant.js"></script>
+  <script src="JS/doc-intelligence.js"></script>
+  <script src="JS/case-intelligence.js"></script>
+  <script src="JS/account.js"></script>
+   <script src="JS/trash-bin.js"></script>
+  <script src="JS/custom-field.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.0.4/tesseract.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    if (window.pdfjsLib) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+  </script>
+  <script src="JS/smart-routing.js"></script>
+
+  <script src="JS/clients.js"></script>
+</body>
+</html>
